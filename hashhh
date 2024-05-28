@@ -1,0 +1,69 @@
+import datetime, random
+from replit import db
+
+def hash_(password, salt):
+    return hash(f"{password}{salt}")
+
+def register_user():
+    username = input("username: ")
+    password = input("password: ")
+    salt = random.randint(1, 99999)
+    hashed_password = hash_(password, salt)
+    print("user registered thank you.")
+    db[username] = {"password": hashed_password, "salt": salt}
+
+def add_diary():
+    login = input("login: ")
+    pass_ = input("pass: ")
+
+    if login in db:
+        stored_salt = db[login]["salt"]
+        stored_pass = db[login]["password"]
+        hashed_password = hash_(pass_, stored_salt)
+        
+        if hashed_password == stored_pass:
+            print("welcome")
+            add_ = input("type what you want to add to the diary: ")
+            list_.append(add_)
+            print(list_)
+        else:
+            print("wrong password or username")
+            print("hashed pass", hashed_password)
+    else:
+        print("wrong username")
+
+def view():
+    which_one = int(input("which most recent entry do you want to see? 1, 2 or 3 or 4 to see whole diary "))
+    if which_one == 1:
+        today = datetime.datetime.now()
+        print(today)
+        most_recent = list_[-1]
+        print(most_recent)
+    elif which_one == 2:
+        second = list_[-2]
+        print(second)
+    elif which_one == 3:
+        third = list_[-3]
+        print(third)
+    elif which_one == 4:
+        print(list_)
+    else:
+        print("wrong number")
+
+list_ = []
+
+def main():
+    while True:
+        user_choice = int(input("1: register 2: login and add to diary 3: view diary or 4: to exit "))
+        if user_choice == 1:
+            register_user()
+        elif user_choice == 2:
+            add_diary()
+        elif user_choice == 3:
+            view()
+        elif user_choice == 4:
+            print("exiting")
+            break
+
+main()
+
